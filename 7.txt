@@ -1,0 +1,48 @@
+7.
+a. Write and execute assembly program to illustrate nested functions.
+PRESERVE8
+THUMB
+AREA |.text|,CODE,READONLY
+EXPORT func
+EXTERN func1
+func
+MOVS R1,#5
+BL func1
+stop B stop
+END
+++++++++++++++++++++++++++
+PRESERVE8
+THUMB
+AREA |.text|,CODE,READONLY
+EXPORT func1
+func1
+MOVS R0,#10
+BX LR
+stop B stop
+END
+++++++++++++++++++++++++++++++
+PRESERVE8
+THUMB
+AREA |.text|,CODE,READONLY
+EXPORT __main
+EXTERN func
+__main
+MOVS R0,#1
+BL func
+stop B stop
+END
+b. Write a C program to display a string “welcome to msrit” on LCD interface.
+#include <stdio.h>
+#include "NUC1xx.h"
+#include "Driver\DrvSYS.h"
+#include "Driver\DrvGPIO.h"
+#include "NUC1xx-LB_002\LCD_Driver.h"
+int main(void)
+{
+UNLOCKREG();
+DrvSYS_Open(48000000);
+LOCKREG();
+Initial_panel();
+clr_all_panel();
+print_lcd(0, "Welcome to MSRIT ");
+}

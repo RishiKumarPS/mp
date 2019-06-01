@@ -1,0 +1,50 @@
+4.
+a. Write and execute assembly program to illustrate the usage of functions (in UDF calculate y=2x+9).
+PRESERVE8
+THUMB
+AREA |.text|,CODE,READONLY
+EXPORT __main
+func
+MOVS R1,#2
+MOVS R3,#9
+MULS R0,R1,R0
+ADDS R0,R0,R3
+BX lr
+__main
+MOV R0,#4
+BL func
+stop B stop
+END
+b. Write a C program to toggle RGB LEDs in sequence.
+#include <stdio.h>
+#include "NUC1xx.h"
+#include "Driver\DrvGPIO.h"
+#include "Driver\DrvUART.h"
+#include "Driver\DrvSYS.h"
+void Init_LED()
+{DrvGPIO_Open(E_GPA, 12, E_IO_OUTPUT);
+DrvGPIO_Open(E_GPA, 13, E_IO_OUTPUT);
+DrvGPIO_Open(E_GPA, 14, E_IO_OUTPUT);
+DrvGPIO_SetBit(E_GPA, 12);
+DrvGPIO_SetBit(E_GPA, 13);
+DrvGPIO_SetBit(E_GPA, 14);
+}
+int main (void)
+{UNLOCKREG();
+DrvSYS_Open(48000000);
+LOCKREG();
+Init_LED();
+while(1)
+{
+DrvGPIO_ClrBit(E_GPA,12);
+DrvSYS_Delay(1000000);
+DrvGPIO_SetBit(E_GPA,12);
+DrvGPIO_ClrBit(E_GPA,13);
+DrvSYS_Delay(1000000);
+DrvGPIO_SetBit(E_GPA,13);
+DrvGPIO_ClrBit(E_GPA,14);
+DrvSYS_Delay(1000000);
+DrvGPIO_SetBit(E_GPA,14);
+DrvSYS_Delay(1000000);
+}
+}

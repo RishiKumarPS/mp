@@ -1,0 +1,59 @@
+6.
+a. Write and execute assembly program to find sum of N array elements, the array locations starts from 20000100 and store the result at the address 20000500.
+PRESERVE8
+THUMB
+AREA |.text|,CODE,READONLY
+EXPORT __main
+__main
+LDR R0,=0x20000100
+LDR R1,=0x20000500
+MOVS R2,#0
+MOVS R4,#0
+sum
+LDRB R3,[R0,R2]
+ADDS R4,R4,R3
+ADDS R2,R2,#1
+CMP R2,#10
+BLT sum
+STR R4,[R1,#0]
+stop B stop
+END
+b. Write a C program to display Ring counter on LEDs.
+#include <stdio.h>
+#include "NUC1xx.h"
+#include "Driver\DrvGPIO.h"
+#include "Driver\DrvUART.h"
+#include "Driver\DrvSYS.h"
+int main (void)
+{
+UNLOCKREG();
+DrvSYS_Open(48000000);
+LOCKREG();
+DrvGPIO_Open(E_GPC, 15, E_IO_OUTPUT);
+DrvGPIO_Open(E_GPC, 14, E_IO_OUTPUT);
+DrvGPIO_Open(E_GPC, 13, E_IO_OUTPUT);
+DrvGPIO_Open(E_GPC, 12, E_IO_OUTPUT);
+DrvGPIO_SetBit(E_GPC, 15);
+DrvGPIO_SetBit(E_GPC, 14);
+DrvGPIO_SetBit(E_GPC, 13);
+DrvGPIO_SetBit(E_GPC, 12);
+while(1)
+{
+DrvGPIO_ClrBit(E_GPC, 15);
+DrvSYS_Delay(100000);
+DrvGPIO_SetBit(E_GPC, 15);
+//DrvSYS_Delay(100000);
+DrvGPIO_ClrBit(E_GPC, 14);
+DrvSYS_Delay(100000);
+DrvGPIO_SetBit(E_GPC, 14);
+//DrvSYS_Delay(100000);
+DrvGPIO_ClrBit(E_GPC, 13);
+DrvSYS_Delay(100000);
+DrvGPIO_SetBit(E_GPC, 13);
+//DrvSYS_Delay(100000);
+DrvGPIO_ClrBit(E_GPC, 12);
+DrvSYS_Delay(100000);
+DrvGPIO_SetBit(E_GPC, 12);
+//DrvSYS_Delay(100000);
+}
+}

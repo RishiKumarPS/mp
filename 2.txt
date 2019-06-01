@@ -1,0 +1,44 @@
+2. a. Write and execute assembly program to clear the bits from 15 to 18 and extract the
+bits from 24 to 26 in a 32 bit data.
+PRESERVE8
+THUMB
+AREA |.text|,CODE,READONLY
+EXPORT __main
+__main
+LDR R0,=0xFFFFFFFF
+LDR R1,=0xFFFFFFFF
+MOVS R3,#15
+MOVS R4,#13
+RORS R0,R0,R3
+LSRS R0,R0,#4
+RORS R0,R0,R4
+LSLS R1,R1,#5
+LSRS R1,R1,#29
+stop B stop
+END
+b. Write a C program to scan the key board and display the key that is pressed on LCD
+or 7-segment.
+#include <stdio.h>
+#include "NUC1xx.h"
+#include "DrvSYS.h"
+#include "DrvGPIO.h"
+#include "scankey.h"
+#include "NUC1xx-LB_002\LCD_Driver.h"
+int main (void)
+{int8_t number;
+char TEXT0[16]="Smpl_LCD_Keypad";
+char TEXT1[16]="Keypad: ";
+UNLOCKREG();
+DrvSYS_Open(48000000);
+LOCKREG();
+Initial_panel();
+clr_all_panel();
+OpenKeyPad();
+print_lcd(0,TEXT0);
+while(1)
+{number = Scankey();
+sprintf(TEXT1+8,"%d",number);
+print_lcd(1, TEXT1);
+DrvSYS_Delay(5000);
+}
+}
